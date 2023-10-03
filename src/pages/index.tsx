@@ -6,11 +6,21 @@ import { Fragment } from "react";
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
+
+interface User {
+  name: string;
+  email: string;
+  image: string;
+}
+
+interface Session {
+  user: User;
+}
+
 export default function Homr() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { data: session, status } = useSession();
   const loading = status === "loading";
-
   return (
     <div className="bg-white h-screen">
       <header className="absolute inset-x-0 top-0 z-50">
@@ -34,8 +44,7 @@ export default function Homr() {
                 <div>
                   <Menu.Button className="inline-flex justify-center w-full rounded-md bg-white p-2 text-sm font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
                     <img
-                      src={session.user.image}
-                      alt={session.user.name}
+                      src={session?.user?.image ?? "/default.png"}
                       className="h-8 w-8 rounded-full"
                     />
                   </Menu.Button>
@@ -53,10 +62,10 @@ export default function Homr() {
                   <Menu.Items className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                     <div className="py-1">
                       <div className="block px-4 py-2 text-sm text-gray-700">
-                        {session.user.name}
+                        {session.user?.name}
                       </div>
                       <div className="block px-4 py-2 text-sm text-gray-700">
-                        {session.user.email}
+                        {session.user?.email}
                       </div>
                       <Menu.Item>
                         {({ active }) => (
