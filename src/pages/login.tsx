@@ -16,14 +16,14 @@ export default function SignIn({
   providers,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { data: session } = useSession();
-    const router = useRouter();
+  const router = useRouter();
 
-   useEffect(() => {
-     if (session) {
-       router.push("/");
-     }
-   }, [session, router]);
- 
+  useEffect(() => {
+    if (session) {
+      router.push("/");
+    }
+  }, [session, router]);
+
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-white h-screen">
@@ -39,23 +39,18 @@ export default function SignIn({
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          
-            
-            <div>
-             
-
-
-              {Object.values(providers).map((provider) => (
-                <div key={provider.name}>
-                  <button
-                    className="mt-5 flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 lowercase"
-                    onClick={() => signIn(provider.id)}
-                  >
-                    sign in with {provider.name}
-                  </button>
-                </div>
-              ))}
-            </div>
+          <div>
+            {Object.values(providers).map((provider) => (
+              <div key={provider.name}>
+                <button
+                  className="mt-5 flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 lowercase"
+                  onClick={() => signIn(provider.id)}
+                >
+                  sign in with {provider.name}
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </>
