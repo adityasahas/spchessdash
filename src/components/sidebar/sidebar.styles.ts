@@ -5,7 +5,7 @@ export const SidebarWrapper = tv({
 
   variants: {
     collapsed: {
-      true: "translate-x-0 ml-0 [display:inherit]",
+      true: "translate-x-0 ml-0 [display:inherit] h-screen",
     },
   },
   // ""
@@ -39,7 +39,7 @@ export const Body = tv({
 });
 
 export const Footer = tv({
-  base: "flex items-center justify-center gap-6 pt-16 pb-8 px-8 md:pt-10 md:pb-0",
+  base: "flex items-center justify-center gap-6 pt-18 pb-8 px-8 md:pt-10 md:pb-0",
 });
 
 export const Sidebar = Object.assign(SidebarWrapper, {

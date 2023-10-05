@@ -14,7 +14,7 @@ import { useSidebarContext } from "../layout/layout-context";
 import { useRouter } from "next/router";
 import { signOut } from "next-auth/react"
 import { FiMenu, FiX } from 'react-icons/fi';  
-
+import { DarkModeSwitch } from "./darkmodeswitch";
 export const SidebarWrapper = () => {
   const router = useRouter();
   const { collapsed, setCollapsed } = useSidebarContext();
@@ -24,8 +24,8 @@ export const SidebarWrapper = () => {
   };
 
   return (
-    <aside className="h-screen z-[202] sticky top-0">
-      <div className="block md:hidden p-4">
+    <aside className="h-screen z-[202] sticky top-0 relative">
+      <div className="block md:hidden p-4 z-203">
         <button onClick={handleToggle}>
           {collapsed ? <FiX size={24} /> : <FiMenu size={24} />}
         </button>
@@ -36,7 +36,7 @@ export const SidebarWrapper = () => {
       <div
         className={Sidebar({
           collapsed: collapsed,
-        })}
+        } ) }
       >
         <div className={Sidebar.Header()}>
           <UserDropdown />
@@ -47,14 +47,14 @@ export const SidebarWrapper = () => {
               title="Home"
               icon={<HomeIcon />}
               isActive={router.pathname === "/home"}
-              href="/"
+              href="/home"
             />
             <SidebarMenu title="Dashboard">
               <SidebarItem
                 isActive={router.pathname === "/regs"}
                 title="Tournament Registrations"
                 icon={<AccountsIcon />}
-                href="accounts"
+                href="regs"
               />
              
               
@@ -62,16 +62,19 @@ export const SidebarWrapper = () => {
                 isActive={router.pathname === "/ladder"}
                 title="Ladder Rankings"
                 icon={<CustomersIcon />}
+                href="ladder"
               />
               <SidebarItem
                 isActive={router.pathname === "/games"}
                 title="Game Archive"
                 icon={<ProductsIcon />}
+                href="games"
               />
               <SidebarItem
                 isActive={router.pathname === "/challenges"}
                 title="Challenges"
                 icon={<ReportsIcon />}
+                href="challenges"
               />
             </SidebarMenu>
             <SidebarMenu title="users">
@@ -92,7 +95,7 @@ export const SidebarWrapper = () => {
               </div>
             </Tooltip>
            <Button color="danger" onClick={() => signOut()} variant="light">Log Out</Button>
-          
+            <DarkModeSwitch />
           </div>
         </div>
       </div>

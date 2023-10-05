@@ -34,7 +34,7 @@ const AdminPage = () => {
   }, [session]);
 
 
-  if (loading || userType === null) return <div>Loading...</div>;
+  if (loading || userType === null) return<Layout> <div>Loading...</div></Layout>;
 
   if (userType !== "admin")
     return (
