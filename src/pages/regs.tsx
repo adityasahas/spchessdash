@@ -66,9 +66,7 @@ const RegAdmin = () => {
 
   if (loading || userType === null)
     return (
-      <Layout>
         <Progress isIndeterminate className="flex flex-center items-center mx-auto" size="lg" />
-      </Layout>
     );
 
   if (userType !== "admin")

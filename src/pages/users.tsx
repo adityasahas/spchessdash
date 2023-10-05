@@ -8,6 +8,7 @@ import {
   TableRow,
   TableCell,
   Button,
+  Progress,
   getKeyValue,
 } from "@nextui-org/react";
 import { Select, SelectItem } from "@nextui-org/react";
@@ -89,9 +90,11 @@ const UserManagement = () => {
 
   if (status === "loading" || userType === null)
     return (
-      <Layout>
-        <div>Loading...</div>
-      </Layout>
+      <Progress
+        isIndeterminate
+        className="flex flex-center items-center mx-auto"
+        size="lg"
+      />
     );
 
   if (userType !== "admin") {
