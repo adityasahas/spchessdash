@@ -36,7 +36,7 @@ export const SidebarWrapper = () => {
       <div
         className={Sidebar({
           collapsed: collapsed,
-        } ) }
+        })}
       >
         <div className={Sidebar.Header()}>
           <UserDropdown />
@@ -56,37 +56,34 @@ export const SidebarWrapper = () => {
                 icon={<AccountsIcon />}
                 href="regs"
               />
-             
-              
+
               <SidebarItem
                 isActive={router.pathname === "/ladder"}
-                title="Ladder Rankings"
+                title="Ladder Rankings (not working)"
                 icon={<CustomersIcon />}
                 href="ladder"
               />
               <SidebarItem
                 isActive={router.pathname === "/games"}
-                title="Game Archive"
+                title="Game Archive (not working)"
                 icon={<ProductsIcon />}
                 href="games"
               />
               <SidebarItem
                 isActive={router.pathname === "/challenges"}
-                title="Challenges"
+                title="Challenges (not working)"
                 icon={<ReportsIcon />}
                 href="challenges"
               />
             </SidebarMenu>
             <SidebarMenu title="users">
-            <SidebarItem
+              <SidebarItem
                 isActive={router.pathname === "/users"}
                 title="admin management"
                 icon={<AccountsIcon />}
                 href="users"
               />
             </SidebarMenu>
-            
-            
           </div>
           <div className={Sidebar.Footer()}>
             <Tooltip content={"Settings"} color="primary">
@@ -94,7 +91,9 @@ export const SidebarWrapper = () => {
                 <SettingsIcon />
               </div>
             </Tooltip>
-           <Button color="danger" onClick={() => signOut()} variant="light">Log Out</Button>
+            <Button color="danger" onClick={() => signOut()} variant="light">
+              Log Out
+            </Button>
             <DarkModeSwitch />
           </div>
         </div>

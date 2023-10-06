@@ -54,7 +54,7 @@ const RegAdmin = () => {
           setUserType(data.userType);
         }
       };
-
+      fetchData();
       fetchUserType();
     }
   }, [session]);

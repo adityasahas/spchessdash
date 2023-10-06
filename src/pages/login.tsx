@@ -58,10 +58,13 @@ export default function SignIn({
 }
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const providers = await getProviders();
+  const csrfToken = await getCsrfToken(context);
+
+  console.log(csrfToken); 
 
   return {
     props: {
-      csrfToken: await getCsrfToken(context),
+      csrfToken: csrfToken ?? null,
       providers: providers ?? [],
     },
   };
