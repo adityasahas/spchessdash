@@ -59,7 +59,7 @@ export const SidebarWrapper = () => {
 
               <SidebarItem
                 isActive={router.pathname === "/ladder"}
-                title="Ladder Rankings (not working)"
+                title="Ladder Rankings"
                 icon={<CustomersIcon />}
                 href="ladder"
               />

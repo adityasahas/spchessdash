@@ -17,13 +17,40 @@ import {
   Pagination,
 } from "@nextui-org/react";
 import { ConfirmationModal } from "../components/confirmation";
+import { DndProvider, useDrag, useDrop, DragPreviewImage } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 interface LadderItem {
   _id: string;
   pos: number;
   name: string;
 }
+const type = "PLAYER";
+interface DraggedItem {
+  index: number;
+}
 
+const DraggablePlayerRow = ({ item, index, movePlayer }) => {
+  const [, ref] = useDrag({
+    type,
+    item: { index },
+  });
+  const [, drop] = useDrop({
+    accept: type,
+    hover: (draggedItem: DraggedItem) => {
+      if (draggedItem.index !== index) {
+        movePlayer(draggedItem.index, index);
+        draggedItem.index = index;
+      }
+    },
+  });
+  return (
+    <tr ref={(node) => ref(drop(node))}>
+      <td className="p-2">{item.pos}</td>
+      <td className="p-2">{item.name}</td>
+    </tr>
+  );
+};
 export default function AdminLadder() {
   const [rows, setRows] = useState<LadderItem[]>([]);
   const [page, setPage] = useState(1);
@@ -54,6 +81,16 @@ export default function AdminLadder() {
     () => Math.ceil(rows.length / rowsPerPage),
     [rows.length, rowsPerPage]
   );
+  const movePlayer = (fromIndex, toIndex) => {
+    const updatedRows = [...rows];
+    const [movedPlayer] = updatedRows.splice(fromIndex, 1);
+    updatedRows.splice(toIndex, 0, movedPlayer);
+    const updatedPosRows = updatedRows.map((item, index) => ({
+      ...item,
+      pos: index + 1,
+    }));
+    setRows(updatedPosRows); 
+  };
 
   const items = useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -114,7 +151,12 @@ export default function AdminLadder() {
     const randomizedRows = [...rows].sort(() => Math.random() - 0.5);
     setRows(randomizedRows.map((item, index) => ({ ...item, pos: index + 1 })));
   };
-
+  const onDragEnd = (result: any) => {
+    if (!result.destination) return;
+    const [reorderedItem] = rows.splice(result.source.index, 1);
+    rows.splice(result.destination.index, 0, reorderedItem);
+    setRows([...rows]);
+  };
   return (
     <div className="container mx-auto p-6 md:p-12 rounded-lg shadow-md">
       <div className="flex flex-col md:flex-row justify-between mb-6">
@@ -135,56 +177,26 @@ export default function AdminLadder() {
           </Button>
         </div>
       </div>
-
-      <Table aria-label="Admin Table" className="min-w-full" isStriped>
-        <TableHeader>
-          <TableColumn className="px-6 py-3 text-left text-xs font-medium ">
-            POSITION
-          </TableColumn>
-          <TableColumn className="px-6 py-3 text-left text-xs font-medium ">
-            NAME
-          </TableColumn>
-          <TableColumn className="px-6 py-3 text-left text-xs font-medium  ">
-            ACTIONS
-          </TableColumn>
-        </TableHeader>
-        <TableBody>
-          {rows.map((item, index) => (
-            <TableRow key={item._id}>
-              <TableCell className="px-6 py-4 whitespace-nowrap">
-                {item.pos}
-              </TableCell>
-              <TableCell className="px-6 py-4 whitespace-nowrap">
-                {item.name}
-              </TableCell>
-              <TableCell className="px-6 py-4 whitespace-nowrap">
-                <Button
-                  onClick={() => handleMove(index, -1)}
-                  color="success"
-                  variant="light"
-                  className="  mr-2"
-                >
-                  move up
-                </Button>
-                <Button
-                  onClick={() => handleMove(index, 1)}
-                  color="warning"
-                  variant="light"
-                >
-                  move down
-                </Button>
-                <Button
-                  onClick={() => handleDeletePlayer(item._id)}
-                  color="danger"
-                  variant="light"
-                >
-                  delete
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <DndProvider backend={HTML5Backend}>
+        <table>
+          <thead>
+            <tr>
+              <th>POSITION</th>
+              <th>NAME</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((item, index) => (
+              <DraggablePlayerRow
+                key={item._id}
+                index={index}
+                item={item}
+                movePlayer={movePlayer}
+              />
+            ))}
+          </tbody>
+        </table>
+      </DndProvider>
 
       <Modal isOpen={isOpen} onOpenChange={onClose} placement="top-center">
         <ModalContent>
@@ -304,3 +316,18 @@ export default function AdminLadder() {
     </div>
   );
 }
+const tableStyles = {
+  width: "100%",
+  borderCollapse: "collapse",
+  border: "1px solid #ddd",
+};
+
+const getRowStyle = (style, isDragging) => ({
+  ...style,
+  padding: "8px",
+  textAlign: "left",
+  borderBottom: "1px solid #ddd",
+  backgroundColor: isDragging ? "lightgreen" : "white",
+  boxShadow: isDragging ? "0 2px 10px rgba(0,0,0,0.3)" : "none",
+  cursor: isDragging ? "grabbing" : "pointer",
+});
