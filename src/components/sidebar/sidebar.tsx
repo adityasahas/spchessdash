@@ -24,15 +24,22 @@ export const SidebarWrapper = () => {
   };
 
   return (
-    <aside className="h-screen z-[202] sticky top-0 relative">
-      <div className="block md:hidden p-4 z-203">
-        <button onClick={handleToggle}>
-          {collapsed ? <FiX size={24} /> : <FiMenu size={24} />}
-        </button>
-      </div>
+    <aside className="h-screen z-[202] sticky top-0 relative flex flex-col">
       {collapsed ? (
-        <div className={Sidebar.Overlay()} onClick={() => setCollapsed()} />
-      ) : null}
+        <div className={Sidebar.Overlay()} onClick={() => setCollapsed()}>
+          <div className="absolute top-4 right-4 z-203">
+            <button onClick={handleToggle}>
+              <FiX size={24} />
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="block md:hidden p-4 z-203">
+          <button onClick={handleToggle}>
+            <FiMenu size={24} />
+          </button>
+        </div>
+      )}
       <div
         className={Sidebar({
           collapsed: collapsed,
@@ -41,13 +48,13 @@ export const SidebarWrapper = () => {
         <div className={Sidebar.Header()}>
           <UserDropdown />
         </div>
-        <div className="flex flex-col justify-between h-full">
+        <div className="flex-grow-1 overflow-y-auto">
           <div className={Sidebar.Body()}>
             <SidebarItem
               title="Home"
               icon={<HomeIcon />}
-              isActive={router.pathname === "/home"}
-              href="/home"
+              isActive={router.pathname === "/dashboard"}
+              href="/dashboard"
             />
             <SidebarMenu title="Dashboard">
               <SidebarItem

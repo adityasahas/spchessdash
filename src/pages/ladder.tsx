@@ -15,6 +15,8 @@ import {
 } from "@nextui-org/react";
 import AdminLadder from "../components/AdminLadder";
 import { Layout } from "../components/layout/layout";
+import LoadingComponent from "../components/loading";
+
 const TournamentRegistrations: React.FC = () => {
   const { data: session, status } = useSession();
   const loading = status === "loading";
@@ -39,29 +41,22 @@ const TournamentRegistrations: React.FC = () => {
     }
   }, [session]);
 
-  if (loading || userType === null)
-    return (
-      <div className="flex flex-col justify-center items-center h-screen text-center">
-        Loading...
-      </div>
-    );
+  if (loading || userType === null) return <LoadingComponent />;
 
   if (userType !== "admin")
     return (
-      <>
-        <div className="flex flex-col justify-center items-center h-screen text-center lowercase">
-          <p>You do not have admin privileges.</p>
-          <p>Contact Adi to get access (give him your email).</p>
-          <Button
-            className="mt-4"
-            color="danger"
-            onClick={() => signOut()}
-            variant="light"
-          >
-            Log Out
-          </Button>
-        </div>
-      </>
+      <div className="flex flex-col justify-center items-center h-screen text-center lowercase">
+        <p>You do not have admin privileges.</p>
+        <p>Contact Adi to get access (give him your email).</p>
+        <Button
+          className="mt-4"
+          color="danger"
+          onClick={() => signOut()}
+          variant="light"
+        >
+          Log Out
+        </Button>
+      </div>
     );
 
   return (

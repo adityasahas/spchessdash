@@ -3,13 +3,14 @@ import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import clientPromise from "../../../utils/mongodb";
+import Google from "next-auth/providers/google";
 
 // Ensure env vars are set
 if (
   !process.env.GITHUB_ID ||
   !process.env.GITHUB_SECRET ||
   !process.env.GOOGLE_CLIENT_ID ||
-  !process.env.GOOGLE_CLIENT_SECRET 
+  !process.env.GOOGLE_CLIENT_SECRET
 ) {
   throw new Error("The GitHub and Google OAuth credentials are not set.");
 }

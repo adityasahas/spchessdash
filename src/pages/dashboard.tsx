@@ -4,6 +4,7 @@ import { Layout } from "../components/layout/layout";
 import { Content } from "../components/home/content";
 import { Button } from "@nextui-org/react";
 import { signOut } from "next-auth/react"
+import LoadingComponent from "@/components/loading";
 
 const AdminPage = () => {
   const { data: session, status } = useSession();
@@ -34,7 +35,7 @@ const AdminPage = () => {
   }, [session]);
 
 
-  if (loading || userType === null) return<Layout> <div>Loading...</div></Layout>;
+  if (loading || userType === null) return<Layout> <LoadingComponent/> </Layout>;
 
   if (userType !== "admin")
     return (

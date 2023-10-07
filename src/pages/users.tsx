@@ -14,12 +14,13 @@ import {
 import { Select, SelectItem } from "@nextui-org/react";
 import { Layout } from "../components/layout/layout"; // Import your Layout component
 import { signOut } from "next-auth/react";
-
+import LoadingComponent from "../components/loading";
+type UserType = "" | "student" | "admin";
 interface User {
   key: string;
   name: string;
   email: string;
-  type: string;
+  type: UserType;
   _id: string;
 }
 
@@ -51,51 +52,62 @@ const UserManagement = () => {
     }
   }, [session]);
 
-  useEffect(() => {
-    if (userType === "admin") {
-      const fetchUsers = async () => {
-        const response = await fetch("/api/users");
-        const data = await response.json();
-        if (data.success) {
-          setUsers(data.users);
-        }
-      };
+const [selectedTypes, setSelectedTypes] = useState<Map<string, Set<string>>>(
+  new Map()
+);
 
-      fetchUsers();
-    }
-  }, [userType]);
+useEffect(() => {
+  if (userType === "admin") {
+    const fetchUsers = async () => {
+      const response = await fetch("/api/users");
+      const data = await response.json();
+      if (data.success) {
+        setUsers(data.users);
+        const initialSelectedTypes = data.users.reduce((acc, user) => {
+          acc.set(user._id, new Set([user.type || ""]));
+          return acc;
+        }, new Map());
+        setSelectedTypes(initialSelectedTypes);
+      }
+    };
 
-  async function handleUserTypeChange(
-    userKey: string,
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) {
-    const newType = event.target.value;
-    const res = await fetch("/api/users", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId: userKey, userType: newType }),
-    });
-    const data = await res.json();
-    if (data.success) {
-      setUsers((prevUsers) => {
-        return prevUsers.map((user) => {
-          if (user.key === userKey) {
-            return { ...user, type: newType };
-          }
-          return user;
-        });
-      });
-    }
+    fetchUsers();
   }
+}, [userType]);
 
-  if (status === "loading" || userType === null)
-    return (
-      <Progress
-        isIndeterminate
-        className="flex flex-center items-center mx-auto"
-        size="lg"
-      />
-    );
+
+const handleUserTypeChange = async (
+  userId: string,
+  event: React.ChangeEvent<HTMLSelectElement>
+) => {
+  const newType = event.target.value === "empty" ? "" : event.target.value;
+
+  const res = await fetch("/api/users", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ userId: userId, userType: newType }),
+  });
+
+  const data = await res.json();
+  if (data.success) {
+    setUsers((prevUsers) => {
+      return prevUsers.map((user) => {
+        if (user._id === userId) {
+          return { ...user, type: newType as UserType };
+        }
+        return user;
+      });
+    });
+    setSelectedTypes((prevSelectedTypes) => {
+      const updatedSelectedTypes = new Map(prevSelectedTypes);
+      updatedSelectedTypes.set(userId, new Set([newType]));
+      return updatedSelectedTypes;
+    });
+  }
+};
+
+
+  if (status === "loading" || userType === null) return <LoadingComponent />;
 
   if (userType !== "admin") {
     return (
@@ -127,9 +139,13 @@ const UserManagement = () => {
             <TableRow key={user._id}>
               {(columnKey) => (
                 <TableCell>
-                  {columnKey === "type2" ? (
+                  {columnKey === "type" ? (
                     <Select
-                      defaultValue={user.type}
+                      variant="underlined"
+                      color="primary"
+                      selectedKeys={
+                        selectedTypes.get(user._id) || new Set([""])
+                      }
                       onChange={(event) =>
                         handleUserTypeChange(user._id, event)
                       }
@@ -142,9 +158,6 @@ const UserManagement = () => {
                       </SelectItem>
                       <SelectItem key="admin" value="admin">
                         Admin
-                      </SelectItem>
-                      <SelectItem key="superadmin" value="superadmin">
-                        SuperAdmin
                       </SelectItem>
                     </Select>
                   ) : (

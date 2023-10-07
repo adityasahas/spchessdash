@@ -31,10 +31,19 @@ export default async function handler(
     }
     case 'POST': {
       const { userId, userType }: UserTypeUpdate = req.body;
-      if (!userId || !userType) {
-        res.status(400).json({ success: false, message: 'Invalid request' });
-        return;
-      }
+    if (
+      !userId ||
+      (userType !== "" &&
+        userType !== "student" &&
+        userType !== "admin" &&
+        userType !== null)
+    ) {
+      res.status(400).json({ success: false, message: "Invalid request" });
+      return;
+    }
+
+
+
       await db.collection('users').updateOne(
         { _id: new ObjectId(userId) },  
         { $set: { type: userType } }

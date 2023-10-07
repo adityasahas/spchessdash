@@ -16,6 +16,7 @@ import {
 } from "@nextui-org/react";
 import { signOut } from "next-auth/react";
 import { ConfirmationModal } from "@/components/confirmation";
+import LoadingComponent from "@/components/loading";
 const RegAdmin = () => {
   const { data: session, status } = useSession();
   const loading = status === "loading";
@@ -66,7 +67,7 @@ const RegAdmin = () => {
 
   if (loading || userType === null)
     return (
-        <Progress isIndeterminate className="flex flex-center items-center mx-auto" size="lg" />
+        <LoadingComponent />
     );
 
   if (userType !== "admin")
