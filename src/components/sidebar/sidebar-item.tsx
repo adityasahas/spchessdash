@@ -1,4 +1,3 @@
-import NextLink from "next/link";
 import React from "react";
 import { useSidebarContext } from "../layout/layout-context";
 import clsx from "clsx";
@@ -13,15 +12,21 @@ interface Props {
 export const SidebarItem = ({ icon, title, isActive, href = "" }: Props) => {
   const { collapsed, setCollapsed } = useSidebarContext();
 
-  const handleClick = () => {
+  const handleClick = (event: React.MouseEvent) => {
+    event.preventDefault(); 
     if (window.innerWidth < 768) {
       setCollapsed();
     }
+    if (href) {
+      window.location.href = href; 
+    }
   };
+
   return (
-    <NextLink
+    <a
       href={href}
       className="text-default-900 active:bg-none max-w-full"
+      onClick={handleClick}
     >
       <div
         className={clsx(
@@ -30,11 +35,10 @@ export const SidebarItem = ({ icon, title, isActive, href = "" }: Props) => {
             : "hover:bg-default-100",
           "flex gap-2 w-full min-h-[44px] h-full items-center px-3.5 rounded-xl cursor-pointer transition-all duration-150 active:scale-[0.98]"
         )}
-        onClick={handleClick}
       >
         {icon}
         <span className="text-default-900">{title}</span>
       </div>
-    </NextLink>
+    </a>
   );
 };
