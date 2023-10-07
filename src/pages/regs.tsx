@@ -36,29 +36,29 @@ const RegAdmin = () => {
     }
   }, [session]);
 
-  useEffect(() => {
-    if (session) {
-      const fetchData = async () => {
-        const res = await fetch("/api/fetchTournamentReg");
-        const data = await res.json();
-        console.log("Data from API:", data);
+ useEffect(() => {
+   if (session) {
+     const fetchData = async () => {
+       const res = await fetch("/api/fetchTournamentReg");
+       const data = await res.json();
+       console.log("Data from API:", data);
+       setRegistrations(data);
 
-        setRegistrations(data);
-      };
-      const fetchUserType = async () => {
-        const email = (session.user as { email: string }).email;
-        if (email) {
-          const response = await fetch(
-            `/api/db?email=${encodeURIComponent(email)}`
-          );
-          const data = await response.json();
-          setUserType(data.userType);
-        }
-      };
-      fetchData();
-      fetchUserType();
-    }
-  }, [session]);
+       setTimeout(async () => {
+         const email = (session.user as { email: string }).email;
+         if (email) {
+           const response = await fetch(
+             `/api/db?email=${encodeURIComponent(email)}`
+           );
+           const data = await response.json();
+           setUserType(data.userType);
+         }
+       }, 2000); 
+     };
+     fetchData();
+   }
+ }, [session]);
+
 
   const handleFinalConfirmation = async () => {
     await fetch("/api/fetchTournamentReg", { method: "DELETE" });

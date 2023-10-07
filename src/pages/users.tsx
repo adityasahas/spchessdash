@@ -35,29 +35,28 @@ const UserManagement = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [userType, setUserType] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (session) {
-      const fetchUserType = async () => {
-        const email = (session.user as { email: string }).email;
-        if (email) {
-          const response = await fetch(
-            `/api/db?email=${encodeURIComponent(email)}`
-          );
-          const data = await response.json();
-          setUserType(data.userType);
-        }
-      };
 
-      fetchUserType();
-    }
-  }, [session]);
 
 const [selectedTypes, setSelectedTypes] = useState<Map<string, Set<string>>>(
   new Map()
 );
 
 useEffect(() => {
-  if (userType === "admin") {
+  if (session) {
+    const fetchUserType = async () => {
+      const email = (session.user as { email: string }).email;
+      if (email) {
+        const response = await fetch(
+          `/api/db?email=${encodeURIComponent(email)}`
+        );
+        const data = await response.json();
+        setUserType(data.userType);
+        if (data.userType === "admin") {
+          await fetchUsers(); // move fetchUsers call inside fetchUserType
+        }
+      }
+    };
+
     const fetchUsers = async () => {
       const response = await fetch("/api/users");
       const data = await response.json();
@@ -71,9 +70,10 @@ useEffect(() => {
       }
     };
 
-    fetchUsers();
+    fetchUserType();
   }
-}, [userType]);
+}, [session]);
+
 
 
 const handleUserTypeChange = async (
