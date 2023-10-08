@@ -12,64 +12,62 @@ import {
   Code,
   Checkbox,
   useDisclosure,
-  Link,Progress
+  Link,
 } from "@nextui-org/react";
 import { signOut } from "next-auth/react";
-import { ConfirmationModal } from "@/components/confirmation";
 import LoadingComponent from "@/components/loading";
+
 const RegAdmin = () => {
   const { data: session, status } = useSession();
   const loading = status === "loading";
   const [userType, setUserType] = useState(null);
   const [registrations, setRegistrations] = useState<any[]>([]);
-  const confirmModal1 = useDisclosure();
-  const confirmModal2 = useDisclosure();
-  const confirmModal3 = useDisclosure();
-  const confirmModal4 = useDisclosure();
-  const confirmModal5 = useDisclosure();
-  const confirmModal6 = useDisclosure();
-  const confirmModal7 = useDisclosure();
-  const confirmModal8 = useDisclosure();
+
   useEffect(() => {
     if (!session) {
       window.location.href = "/login";
     }
   }, [session]);
 
- useEffect(() => {
-   if (session) {
-     const fetchData = async () => {
-       const res = await fetch("/api/fetchTournamentReg");
-       const data = await res.json();
-       console.log("Data from API:", data);
-       setRegistrations(data);
+  useEffect(() => {
+    let reloadTimeoutId;
 
-       setTimeout(async () => {
-         const email = (session.user as { email: string }).email;
-         if (email) {
-           const response = await fetch(
-             `/api/db?email=${encodeURIComponent(email)}`
-           );
-           const data = await response.json();
-           setUserType(data.userType);
-         }
-       }, 2000); 
-     };
-     fetchData();
-   }
- }, [session]);
+    if (loading) {
+      reloadTimeoutId = setTimeout(() => {
+        window.location.reload();
+      }, 5000);
+    }
 
+    if (session) {
+      const fetchData = async () => {
+        const res = await fetch("/api/fetchTournamentReg");
+        const data = await res.json();
+        console.log("Data from API:", data);
+        setRegistrations(data);
+
+        setTimeout(async () => {
+          const email = (session.user as { email: string }).email;
+          if (email) {
+            const response = await fetch(
+              `/api/db?email=${encodeURIComponent(email)}`
+            );
+            const data = await response.json();
+            setUserType(data.userType);
+          }
+        }, 2000);
+      };
+      fetchData();
+    }
+
+    return () => {
+      clearTimeout(reloadTimeoutId);
+    };
+  }, [session, loading]);
 
   const handleFinalConfirmation = async () => {
     await fetch("/api/fetchTournamentReg", { method: "DELETE" });
     setRegistrations([]);
   };
-
-  if (loading || userType === null)
-    return (
-        <LoadingComponent />
-    );
-
   if (userType !== "admin")
     return (
       <>
@@ -143,7 +141,6 @@ const RegAdmin = () => {
             </div>
           ))}
         </div>
-       
       </div>
     </Layout>
   );

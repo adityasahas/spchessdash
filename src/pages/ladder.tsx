@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import { useSession, getSession, signOut } from "next-auth/react";
 import {
   Card,
@@ -15,6 +14,8 @@ import {
 } from "@nextui-org/react";
 import AdminLadder from "../components/AdminLadder";
 import { Layout } from "../components/layout/layout";
+
+import React, { useEffect, useState } from "react";
 import LoadingComponent from "../components/loading";
 
 const TournamentRegistrations: React.FC = () => {
@@ -23,6 +24,14 @@ const TournamentRegistrations: React.FC = () => {
   const [userType, setUserType] = useState<string | null>(null);
 
   useEffect(() => {
+    let reloadTimeoutId;
+
+    if (loading) {
+      reloadTimeoutId = setTimeout(() => {
+        window.location.reload();
+      }, 5000);
+    }
+
     if (!session) {
       window.location.href = "/login";
     } else {
@@ -39,7 +48,11 @@ const TournamentRegistrations: React.FC = () => {
 
       fetchUserType();
     }
-  }, [session]);
+
+    return () => {
+      clearTimeout(reloadTimeoutId);
+    };
+  }, [session, loading]);
 
   if (loading || userType === null) return <LoadingComponent />;
 
