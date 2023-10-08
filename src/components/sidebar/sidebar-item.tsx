@@ -24,7 +24,6 @@ export const SidebarItem = ({ icon, title, isActive, href = "" }: Props) => {
 
   return (
     <a
-      href={href}
       className="text-default-900 active:bg-none max-w-full"
       onClick={handleClick}
     >
