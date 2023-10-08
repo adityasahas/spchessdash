@@ -7,6 +7,7 @@ const LoadingComponent: React.FC = () => {
     <div className="flex flex-col items-center justify-center min-h-screen">
       <Spinner size="lg" color="primary" />
       <p className="mt-4 text-gray-600">Loading content...</p>
+      <p className="mt-4 text-gray-600">this websites a work in progress, refresh the page for it to load. sorry</p>
     </div>
   );
 };

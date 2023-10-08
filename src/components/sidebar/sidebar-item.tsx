@@ -9,21 +9,27 @@ interface Props {
   href?: string;
 }
 
-export const SidebarItem = ({ icon, title, isActive, href = "" }: Props) => {
+export const SidebarItem: React.FC<Props> = ({
+  icon,
+  title,
+  isActive,
+  href = "",
+}) => {
   const { collapsed, setCollapsed } = useSidebarContext();
 
   const handleClick = (event: React.MouseEvent) => {
-    event.preventDefault(); 
+    event.preventDefault();
     if (window.innerWidth < 768) {
       setCollapsed();
     }
     if (href) {
-      window.location.href = href; 
+      window.location.href = href;
     }
   };
 
   return (
     <a
+      href={href}
       className="text-default-900 active:bg-none max-w-full"
       onClick={handleClick}
     >
