@@ -22,7 +22,7 @@ export const Content = () => {
       <div className="text-left">
         <h1 className="text-5xl font-bold">
           {chessClubMessage || "Welcome to the sp chess dashboard,"} <br />
-          {session?.user?.name || "Guest"}
+          {session?.user?.name || session?.user?.email}
         </h1>
         <p className="text-3xl mt-5">{date.toLocaleString()}</p>
         <Divider className="my-5" />

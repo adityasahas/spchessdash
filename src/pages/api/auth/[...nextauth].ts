@@ -3,7 +3,7 @@ import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import clientPromise from "../../../utils/mongodb";
-import Google from "next-auth/providers/google";
+import EmailProvider from "next-auth/providers/email";
 
 // Ensure env vars are set
 if (
@@ -30,9 +30,20 @@ export const authOptions = {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
+    EmailProvider({
+      server: {
+        host: "smtp.gmail.com",
+        port: 587,
+        auth: {
+          user: "contact@adityasahas.tech",
+          pass: process.env.NEXT_PUBLIC_PASSWORD,
+        },
+      },
+      from: "contact@adityasahas.tech",
+    }),
   ],
   pages: {
-    error: "/access-denied",
+    verifyRequest: "/verify-request",
   },
 };
 
