@@ -24,6 +24,12 @@ export const SidebarWrapper = () => {
   };
 
   return (
+    <>
+    <div className="fixed top-4 left-4 z-50 block md:hidden p-4">
+      <button onClick={handleToggle}>
+        <FiMenu size={24} />
+      </button>
+    </div>
     <aside className="h-screen z-[202] sticky top-0 relative flex flex-col">
       {collapsed ? (
         <div className={Sidebar.Overlay()} onClick={() => setCollapsed()}>
@@ -33,13 +39,7 @@ export const SidebarWrapper = () => {
             </button>
           </div>
         </div>
-      ) : (
-        <div className="block md:hidden p-4 z-203">
-          <button onClick={handleToggle}>
-            <FiMenu size={24} />
-          </button>
-        </div>
-      )}
+      ) : null}
       <div
         className={Sidebar({
           collapsed: collapsed,
@@ -108,5 +108,6 @@ export const SidebarWrapper = () => {
         </div>
       </div>
     </aside>
+    </>
   );
 };

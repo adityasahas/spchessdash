@@ -33,24 +33,24 @@ export const Content = () => {
 
   
   return (
-    <div className="flex flex-col justify-center items-center h-screen text-left mx-auto">
+    <div className="flex flex-col justify-center items-center h-screen text-left  mx-5 md:mx-auto">
       <motion.div
         className="text-left"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        <motion.h1 className="text-5xl font-bold" variants={itemVariants}>
+        <motion.h1 className="text-4xl md:text-5xl font-bold" variants={itemVariants}>
           {chessClubMessage || "Welcome to the sp chess dashboard,"} <br />
           {session?.user?.name || session?.user?.email}
         </motion.h1>
-        <motion.p className="text-3xl mt-5" variants={itemVariants}>
+        <motion.p className="text-2xl md:text-3xl mt-5" variants={itemVariants}>
           {date.toLocaleString()}
         </motion.p>
         <motion.div className="my-5" variants={itemVariants}>
           <Divider />
         </motion.div>
-        <motion.p className="text-3xl mt-5" variants={itemVariants}>
+        <motion.p className="text-2xl  mt-5" variants={itemVariants}>
           Your auth session expires at: {formattedExpires}
         </motion.p>
       </motion.div>
