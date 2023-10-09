@@ -27,9 +27,13 @@ export const UserDropdown = () => {
   return (
     <Dropdown>
       <DropdownTrigger>
-        <User name={session?.user?.name} description={session?.user?.email} avatarProps={{
-        src: session?.user?.image || "/default.png",
-      }} />
+        <User
+          name={session?.user?.name}
+          description={session?.user?.email}
+          avatarProps={{
+            src: session?.user?.image || "/default.png",
+          }}
+        />
         {/* <img className="w-10 h-10 rounded-full " src={session?.user?.image || "/default.png" }/> */}
       </DropdownTrigger>
       <DropdownMenu
@@ -44,10 +48,14 @@ export const UserDropdown = () => {
           <p>{session?.user?.email || "No email available"}</p>
         </DropdownItem>
 
-        <DropdownItem key="logout" color="danger" className="text-danger ">
+        <DropdownItem
+          key="logout"
+          color="danger"
+          className="text-danger "
+          onClick={() => signOut()}
+        >
           Log Out
         </DropdownItem>
-      
       </DropdownMenu>
     </Dropdown>
   );
