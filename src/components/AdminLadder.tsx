@@ -19,6 +19,7 @@ import {
 import { ConfirmationModal } from "../components/confirmation";
 import { DndProvider, useDrag, useDrop, DragPreviewImage } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { motion } from "framer-motion";
 
 interface LadderItem {
   _id: string;
@@ -45,10 +46,15 @@ const DraggablePlayerRow = ({ item, index, movePlayer }) => {
     },
   });
   return (
-    <tr ref={(node) => ref(drop(node))}>
-      <td className="p-2">{item.pos}</td>
-      <td className="p-2">{item.name}</td>
-    </tr>
+    <motion.tr
+    ref={(node) => ref(drop(node))}
+    initial={{ opacity: 0, y: -20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: index * 0.1 }}
+  >
+    <td className="p-2">{item.pos}</td>
+    <td className="p-2">{item.name}</td>
+  </motion.tr>
   );
 };
 export default function AdminLadder() {

@@ -44,6 +44,7 @@ export const authOptions = {
   ],
   pages: {
     verifyRequest: "/verify-request",
+    error: "/error"
   },
 };
 

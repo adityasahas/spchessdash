@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { Divider } from "@nextui-org/react";
 import { isFriday, isWithinInterval } from "date-fns";
-
+import { motion } from "framer-motion";
 export const Content = () => {
   const { data: session } = useSession();
   const [date, setDate] = useState(new Date());
@@ -16,20 +16,44 @@ export const Content = () => {
   const formattedExpires = expiresDate.toLocaleString();
 
   const chessClubMessage = checkForChessClubMessage(date);
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.5,
+      },
+    },
+  };
 
+  const itemVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+  };
+
+  
   return (
     <div className="flex flex-col justify-center items-center h-screen text-left mx-auto">
-      <div className="text-left">
-        <h1 className="text-5xl font-bold">
+      <motion.div
+        className="text-left"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.h1 className="text-5xl font-bold" variants={itemVariants}>
           {chessClubMessage || "Welcome to the sp chess dashboard,"} <br />
           {session?.user?.name || session?.user?.email}
-        </h1>
-        <p className="text-3xl mt-5">{date.toLocaleString()}</p>
-        <Divider className="my-5" />
-        <p className="text-3xl mt-5">
+        </motion.h1>
+        <motion.p className="text-3xl mt-5" variants={itemVariants}>
+          {date.toLocaleString()}
+        </motion.p>
+        <motion.div className="my-5" variants={itemVariants}>
+          <Divider />
+        </motion.div>
+        <motion.p className="text-3xl mt-5" variants={itemVariants}>
           Your auth session expires at: {formattedExpires}
-        </p>
-      </div>
+        </motion.p>
+      </motion.div>
     </div>
   );
 };
