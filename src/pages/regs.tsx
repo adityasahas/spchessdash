@@ -68,6 +68,10 @@ const RegAdmin = () => {
     await fetch("/api/fetchTournamentReg", { method: "DELETE" });
     setRegistrations([]);
   };
+  if (loading) {
+    return <LoadingComponent />;
+  }
+
   if (userType !== "admin")
     return (
       <>

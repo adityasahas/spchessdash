@@ -35,7 +35,7 @@ const AdminPage = () => {
   }, [session]);
 
 
-  if (loading || userType === null) return<Layout> <LoadingComponent/> </Layout>;
+  if (loading || userType === null) return <LoadingComponent/> ;
 
   if (userType !== "admin")
     return (
