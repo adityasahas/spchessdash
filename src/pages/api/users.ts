@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
 import { connectToDb } from "../../utils/userMongo";
-import { ObjectId } from 'mongodb';  // Import the ObjectId constructor
+import { ObjectId } from 'mongodb';  
 
 interface UserTypeUpdate {
   userId: string;

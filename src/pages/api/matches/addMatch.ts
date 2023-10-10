@@ -12,7 +12,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       visibility,
       createdAt: new Date(),
     });
-    res.status(201).json({ success: true, data: result.ops[0] });
+    const insertedId = result.insertedId;
+    const insertedDocument = await db
+      .collection("matches")
+      .findOne({ _id: insertedId });
+    res.status(201).json({ success: true, data: insertedDocument });
   } else {
     res.status(405).json({ error: "Method Not Allowed" });
   }

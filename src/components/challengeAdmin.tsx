@@ -1,4 +1,3 @@
-// pages/ChallengeManager.tsx
 import React, { useState, useEffect } from "react";
 import useSWR, { mutate } from "swr";
 import {
