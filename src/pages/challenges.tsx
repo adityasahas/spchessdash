@@ -1,0 +1,97 @@
+import { useSession, getSession, signOut } from "next-auth/react";
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Checkbox,
+  Button,
+  Chip,
+  Divider,
+  useDisclosure,
+  Code,
+  Kbd,
+} from "@nextui-org/react";
+import ChallengeManager from "../components/challengeAdmin";
+import { Layout } from "../components/layout/layout";
+
+import React, { useEffect, useState } from "react";
+import LoadingComponent from "../components/loading";
+
+const TournamentRegistrations: React.FC = () => {
+  const { data: session, status } = useSession();
+  const loading = status === "loading";
+  const [userType, setUserType] = useState<string | null>(null);
+
+  useEffect(() => {
+    let reloadTimeoutId;
+
+    if (loading) {
+      reloadTimeoutId = setTimeout(() => {
+        window.location.reload();
+      }, 5000);
+    }
+
+    if (!session) {
+      window.location.href = "/login";
+    } else {
+      const fetchUserType = async () => {
+        const email = (session.user as { email: string }).email;
+        if (email) {
+          const response = await fetch(
+            `/api/db?email=${encodeURIComponent(email)}`
+          );
+          const data = await response.json();
+          setUserType(data.userType);
+        }
+      };
+
+      fetchUserType();
+    }
+
+    return () => {
+      clearTimeout(reloadTimeoutId);
+    };
+  }, [session, loading]);
+
+  if (loading || userType === null) return <LoadingComponent />;
+
+  if (userType !== "admin")
+    return (
+      <div className="flex flex-col justify-center items-center h-screen text-center lowercase">
+        <p>You do not have admin privileges.</p>
+        <p>Contact Adi to get access (give him your email).</p>
+        <Button
+          className="mt-4"
+          color="danger"
+          onClick={() => signOut()}
+          variant="light"
+        >
+          Log Out
+        </Button>
+      </div>
+    );
+
+  return (
+    <Layout>
+      <div className="container mx-auto px-4">
+        <div className="flex flex-col justify-center items-center my-4">
+          <h1 className="text-4xl md:mr-4 mb-4 md:mb-0 font-bold">
+            challenge manager.
+          </h1>
+          
+        </div>
+        <ChallengeManager />
+      </div>
+    </Layout>
+  );
+};
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+  return {
+    props: { session },
+  };
+}
+
+export default TournamentRegistrations;
