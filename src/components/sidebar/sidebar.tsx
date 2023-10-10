@@ -71,15 +71,10 @@ export const SidebarWrapper = () => {
                   icon={<CustomersIcon />}
                   href="ladder"
                 />
-                <SidebarItem
-                  isActive={router.pathname === "/games"}
-                  title="Game Archive (not working)"
-                  icon={<ProductsIcon />}
-                  href="games"
-                />
+                
                 <SidebarItem
                   isActive={router.pathname === "/challenges"}
-                  title="Challenges (not working)"
+                  title="Challenges"
                   icon={<ReportsIcon />}
                   href="challenges"
                 />

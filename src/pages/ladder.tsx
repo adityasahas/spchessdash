@@ -14,7 +14,7 @@ import {
 } from "@nextui-org/react";
 import AdminLadder from "../components/AdminLadder";
 import { Layout } from "../components/layout/layout";
-
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import LoadingComponent from "../components/loading";
 
@@ -22,7 +22,7 @@ const TournamentRegistrations: React.FC = () => {
   const { data: session, status } = useSession();
   const loading = status === "loading";
   const [userType, setUserType] = useState<string | null>(null);
-
+  const router = useRouter();
   useEffect(() => {
     let reloadTimeoutId;
 
@@ -55,7 +55,10 @@ const TournamentRegistrations: React.FC = () => {
   }, [session, loading]);
 
   if (loading || userType === null) return <LoadingComponent />;
-
+  if (!session) {
+    router.push("/login");
+    return null;
+  }
   if (userType !== "admin")
     return (
       <div className="flex flex-col justify-center items-center h-screen text-center lowercase">

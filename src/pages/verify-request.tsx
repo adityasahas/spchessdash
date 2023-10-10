@@ -20,7 +20,7 @@ const VerifyRequest = ({ providers }) => {
             If you did not receive the email,{" "}
             <Link
               className="font-medium text-indigo-600 hover:text-indigo-500"
-               href="/auth/signin"
+               href="/login"
             >
               try again
             </Link>

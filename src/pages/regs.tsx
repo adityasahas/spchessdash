@@ -16,13 +16,14 @@ import {
 } from "@nextui-org/react";
 import { signOut } from "next-auth/react";
 import LoadingComponent from "@/components/loading";
+import { useRouter } from "next/router";
 
 const RegAdmin = () => {
   const { data: session, status } = useSession();
   const loading = status === "loading";
   const [userType, setUserType] = useState(null);
   const [registrations, setRegistrations] = useState<any[]>([]);
-
+  const router = useRouter();
   useEffect(() => {
     if (!session) {
       window.location.href = "/login";
@@ -71,7 +72,10 @@ const RegAdmin = () => {
   if (userType === null || loading) {
     return <LoadingComponent />;
   }
-
+if (!session) {
+  router.push("/login");
+  return null;
+}
   if (userType !== "admin")
     return (
       <>

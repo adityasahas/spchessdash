@@ -17,6 +17,8 @@ import {
 } from "@nextui-org/react";
 import { DeleteIcon } from "./icons/deleteIcon";
 import { EditIcon } from "./icons/editIcon";
+import FlipMove from "react-flip-move";
+
 interface Match {
   _id: string;
   player1: string;
@@ -80,7 +82,10 @@ const ChallengeManager: React.FC = () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newMatch),
     });
-    mutate("/api/matches");
+    mutate("/api/matches/matches");
+    setPlayer1("");
+    setPlayer2("");
+    setMatchTime("");
     onOpenChange();
   };
   const deleteMatch = async (matchId: string) => {
@@ -101,7 +106,7 @@ const ChallengeManager: React.FC = () => {
       }),
     });
     setVisibility(newVisibility);
-    mutate("/api/matches");
+    mutate("/api/matches/matches");
   };
 
   return (
@@ -214,14 +219,18 @@ const ChallengeManager: React.FC = () => {
           )}
         </ModalContent>
       </Modal>
-      <div className="matches flex flex-wrap -m-2 mt-16">
+      <FlipMove className="matches grid grid-cols-1 md:grid-cols-3 gap-4 mt-16">
         {error ? (
           <div>Error loading matches.</div>
         ) : !matches ? (
           <div>Loading...</div>
         ) : Array.isArray(matches) ? (
           matches.map((match) => (
-            <div key={match._id} className="p-2 flex-1 min-w-1/3">
+            <div
+              key={match._id}
+              className="p-2 flex-1 min-w-1/3 md:min-w-1/4 lg:min-w-1/5 xl:min-w-1/6"
+              style={{ minWidth: "200px" }}
+            >
               <Card>
                 <CardHeader>
                   Match between {match.player1} and {match.player2}
@@ -255,7 +264,7 @@ const ChallengeManager: React.FC = () => {
         ) : (
           <div>Received unexpected data format</div>
         )}
-      </div>
+      </FlipMove>
     </div>
   );
 };

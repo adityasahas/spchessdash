@@ -12,9 +12,10 @@ import {
   getKeyValue,
 } from "@nextui-org/react";
 import { Select, SelectItem } from "@nextui-org/react";
-import { Layout } from "../components/layout/layout"; // Import your Layout component
+import { Layout } from "../components/layout/layout";
 import { signOut } from "next-auth/react";
 import LoadingComponent from "../components/loading";
+import { useRouter } from "next/router";
 type UserType = "" | "student" | "admin";
 interface User {
   key: string;
@@ -34,81 +35,80 @@ const UserManagement = () => {
   const { data: session, status } = useSession();
   const [users, setUsers] = useState<User[]>([]);
   const [userType, setUserType] = useState<string | null>(null);
+  const router = useRouter();
 
+  const [selectedTypes, setSelectedTypes] = useState<Map<string, Set<string>>>(
+    new Map()
+  );
 
+  useEffect(() => {
+    if (session) {
+      const fetchUserType = async () => {
+        const email = (session.user as { email: string }).email;
+        if (email) {
+          const response = await fetch(
+            `/api/db?email=${encodeURIComponent(email)}`
+          );
+          const data = await response.json();
+          setUserType(data.userType);
+          if (data.userType === "admin") {
+            await fetchUsers(); // move fetchUsers call inside fetchUserType
+          }
+        }
+      };
 
-const [selectedTypes, setSelectedTypes] = useState<Map<string, Set<string>>>(
-  new Map()
-);
-
-useEffect(() => {
-  if (session) {
-    const fetchUserType = async () => {
-      const email = (session.user as { email: string }).email;
-      if (email) {
-        const response = await fetch(
-          `/api/db?email=${encodeURIComponent(email)}`
-        );
+      const fetchUsers = async () => {
+        const response = await fetch("/api/users");
         const data = await response.json();
-        setUserType(data.userType);
-        if (data.userType === "admin") {
-          await fetchUsers(); // move fetchUsers call inside fetchUserType
+        if (data.success) {
+          setUsers(data.users);
+          const initialSelectedTypes = data.users.reduce((acc, user) => {
+            acc.set(user._id, new Set([user.type || ""]));
+            return acc;
+          }, new Map());
+          setSelectedTypes(initialSelectedTypes);
         }
-      }
-    };
+      };
 
-    const fetchUsers = async () => {
-      const response = await fetch("/api/users");
-      const data = await response.json();
-      if (data.success) {
-        setUsers(data.users);
-        const initialSelectedTypes = data.users.reduce((acc, user) => {
-          acc.set(user._id, new Set([user.type || ""]));
-          return acc;
-        }, new Map());
-        setSelectedTypes(initialSelectedTypes);
-      }
-    };
+      fetchUserType();
+    }
+  }, [session]);
 
-    fetchUserType();
-  }
-}, [session]);
+  const handleUserTypeChange = async (
+    userId: string,
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const newType = event.target.value === "empty" ? "" : event.target.value;
 
+    const res = await fetch("/api/users", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId: userId, userType: newType }),
+    });
 
-
-const handleUserTypeChange = async (
-  userId: string,
-  event: React.ChangeEvent<HTMLSelectElement>
-) => {
-  const newType = event.target.value === "empty" ? "" : event.target.value;
-
-  const res = await fetch("/api/users", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ userId: userId, userType: newType }),
-  });
-
-  const data = await res.json();
-  if (data.success) {
-    setUsers((prevUsers) => {
-      return prevUsers.map((user) => {
-        if (user._id === userId) {
-          return { ...user, type: newType as UserType };
-        }
-        return user;
+    const data = await res.json();
+    if (data.success) {
+      setUsers((prevUsers) => {
+        return prevUsers.map((user) => {
+          if (user._id === userId) {
+            return { ...user, type: newType as UserType };
+          }
+          return user;
+        });
       });
-    });
-    setSelectedTypes((prevSelectedTypes) => {
-      const updatedSelectedTypes = new Map(prevSelectedTypes);
-      updatedSelectedTypes.set(userId, new Set([newType]));
-      return updatedSelectedTypes;
-    });
-  }
-};
-
+      setSelectedTypes((prevSelectedTypes) => {
+        const updatedSelectedTypes = new Map(prevSelectedTypes);
+        updatedSelectedTypes.set(userId, new Set([newType]));
+        return updatedSelectedTypes;
+      });
+    }
+  };
 
   if (status === "loading" || userType === null) return <LoadingComponent />;
-
+  if (!session) {
+    router.push("/login");
+    return null;
+  }
   if (userType !== "admin") {
     return (
       <div className="flex flex-col justify-center items-center h-screen text-center lowercase">

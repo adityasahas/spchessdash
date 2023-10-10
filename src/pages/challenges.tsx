@@ -14,15 +14,15 @@ import {
 } from "@nextui-org/react";
 import ChallengeManager from "../components/challengeAdmin";
 import { Layout } from "../components/layout/layout";
-
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import LoadingComponent from "../components/loading";
 
-const TournamentRegistrations: React.FC = () => {
+const ChallengeManagePager: React.FC = () => {
   const { data: session, status } = useSession();
   const loading = status === "loading";
   const [userType, setUserType] = useState<string | null>(null);
-
+  const router = useRouter();
   useEffect(() => {
     let reloadTimeoutId;
 
@@ -55,7 +55,10 @@ const TournamentRegistrations: React.FC = () => {
   }, [session, loading]);
 
   if (loading || userType === null) return <LoadingComponent />;
-
+if (!session) {
+  router.push("/login");
+  return null;
+}
   if (userType !== "admin")
     return (
       <div className="flex flex-col justify-center items-center h-screen text-center lowercase">
@@ -76,7 +79,7 @@ const TournamentRegistrations: React.FC = () => {
     <Layout>
       <div className="container mx-auto px-4">
         <div className="flex flex-col justify-center items-center my-4">
-          <h1 className="text-4xl md:mr-4 mb-4 md:mb-0 font-bold">
+          <h1 className="text-4xl md:mr-4 mb-4 md:mb-0 font-bold mt-16">
             challenge manager.
           </h1>
           
@@ -94,4 +97,4 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default TournamentRegistrations;
+export default ChallengeManagePager;
