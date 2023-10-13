@@ -6,7 +6,25 @@ import { motion } from "framer-motion";
 export const Content = () => {
   const { data: session } = useSession();
   const [date, setDate] = useState(new Date());
+  const [userName, setUserName] = useState(null);
+  useEffect(() => {
+    const fetchUserName = async () => {
+      if (!session?.user?.name && session?.user?.email) {
+        console.log("Email:", session?.user?.email);
 
+        const response = await fetch("/api/addName", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: session.user.email }),
+        });
+        const result = await response.json();
+        setUserName(result.name);
+      }
+    };
+    fetchUserName();
+  }, [session]);
   useEffect(() => {
     const timer = setInterval(() => setDate(new Date()), 1000);
     return () => clearInterval(timer);
@@ -40,9 +58,12 @@ export const Content = () => {
         initial="hidden"
         animate="visible"
       >
-        <motion.h1 className="text-4xl md:text-5xl font-bold" variants={itemVariants}>
+        <motion.h1
+          className="text-4xl md:text-5xl font-bold"
+          variants={itemVariants}
+        >
           {chessClubMessage || "Welcome to the sp chess dashboard,"} <br />
-          {session?.user?.name || session?.user?.email}
+          {session?.user?.name || userName || session?.user?.email}
         </motion.h1>
         <motion.p className="text-2xl md:text-3xl mt-5" variants={itemVariants}>
           {date.toLocaleString()}

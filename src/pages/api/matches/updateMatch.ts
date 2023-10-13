@@ -5,14 +5,13 @@ import { connectToDb } from "../../../utils/legacyMongo";
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "PUT") {
     const { db } = await connectToDb();
-    const { _id, player1, player2, matchTime, visibility } = req.body;
+    const { _id, player1, player2,  visibility } = req.body;
     const result = await db.collection("matches").updateOne(
       { _id },
       {
         $set: {
           player1,
           player2,
-          matchTime,
           visibility,
         },
       }

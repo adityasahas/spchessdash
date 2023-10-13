@@ -146,12 +146,7 @@ const ChallengeManager: React.FC = () => {
                   label="Player 2"
                   variant="underlined"
                 />
-                <Input
-                  value={matchTime}
-                  onChange={(e) => setMatchTime(e.target.value)}
-                  label="Match Time"
-                  variant="underlined"
-                />
+               
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="flat" onPress={onClose}>
@@ -195,16 +190,7 @@ const ChallengeManager: React.FC = () => {
                   label="Player 2"
                   variant="underlined"
                 />
-                <Input
-                  value={editMatchData ? editMatchData.matchTime : ""}
-                  onChange={(e) =>
-                    setEditMatchData((prev) =>
-                      prev ? { ...prev, matchTime: e.target.value } : null
-                    )
-                  }
-                  label="Match Time"
-                  variant="underlined"
-                />
+          
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="flat" onPress={onClose}>
@@ -234,8 +220,6 @@ const ChallengeManager: React.FC = () => {
                 <CardHeader>
                   Match between {match.player1} and {match.player2}
                 </CardHeader>
-                <CardBody>Scheduled at: {match.matchTime}</CardBody>
-                <CardBody>Visibility: {match.visibility}</CardBody>
                 <CardFooter>
                   <div className="flex justify-end">
                     <Button

@@ -109,7 +109,7 @@ const UserManagement = () => {
     router.push("/login");
     return null;
   }
-  if (userType !== "admin") {
+  if (userType !== "admin" ) {
     return (
       <div className="flex flex-col justify-center items-center h-screen text-center lowercase">
         <p>You do not have admin privileges.</p>

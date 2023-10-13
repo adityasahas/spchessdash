@@ -8,7 +8,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const result = await db.collection("matches").insertOne({
       player1,
       player2,
-      matchTime,
       visibility,
       createdAt: new Date(),
     });
