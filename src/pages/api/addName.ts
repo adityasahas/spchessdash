@@ -22,7 +22,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       messages: [
         {
           role: "system",
-          content: `The name (account for online aliases and middle initials/names) associated with the email ${email} is`,
+          content: `Given that an email address is "${email}", extract or predict the possible first name, last name, and any potential middle name or alias that might be associated with it. Consider common patterns in email creation like using initials, names, or aliases, and provide a best-guess name.`,
         },
       ],
       model: "gpt-3.5-turbo",
