@@ -37,23 +37,6 @@ const AdminPage = () => {
 
   if (loading || userType === null) return <LoadingComponent/> ;
 
-  if (userType !== "admin")
-    return (
-      <>
-        <div className="flex flex-col justify-center items-center h-screen text-center lowercase">
-          <p>You do not have admin privileges.</p>
-          <p>Contact Adi to get access (give him your email).</p>
-          <Button
-            className="mt-4"
-            color="danger"
-            onClick={() => signOut()}
-            variant="light"
-          >
-            Log Out
-          </Button>
-        </div>
-      </>
-    );
 
   return (
     <Layout>
