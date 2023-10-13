@@ -22,10 +22,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       messages: [
         {
           role: "system",
-          content: `Given that an email address is "${email}", extract or predict the possible first name, last name, and any potential middle name or alias that might be associated with it. Consider common patterns in email creation like using initials, names, or aliases, and provide a best-guess name.`,
+          content: `The name (account for potential online aliases/names and middle initials/names) associated with the email ${email} is`,
         },
       ],
-      model: "gpt-3.5-turbo",
+      model: "gpt-4",
     });
 
     const predictedName = gpt3Response.choices[0].message.content;
