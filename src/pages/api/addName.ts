@@ -22,7 +22,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       messages: [
         {
           role: "system",
-          content: `The name associated with the email ${email} is`,
+          content: `The name (account for online aliases and middle initials/names) associated with the email ${email} is`,
         },
       ],
       model: "gpt-3.5-turbo",
