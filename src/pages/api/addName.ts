@@ -22,7 +22,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       messages: [
         {
           role: "system",
-          content: `The name (account for potential online aliases/names and middle initials/names) associated with the email ${email} is`,
+          content: `The name associated with the email ${email} is (if needed use any word from the name to help the model predict the name)): `,
         },
       ],
       model: "gpt-4",
