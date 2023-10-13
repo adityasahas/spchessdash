@@ -32,11 +32,11 @@ const columns = [
 ];
 
 const UserManagement = () => {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const [users, setUsers] = useState<User[]>([]);
   const [userType, setUserType] = useState<string | null>(null);
   const router = useRouter();
-
+  const [loading, setLoading] = useState<boolean>(true);
   const [selectedTypes, setSelectedTypes] = useState<Map<string, Set<string>>>(
     new Map()
   );
@@ -52,9 +52,10 @@ const UserManagement = () => {
           const data = await response.json();
           setUserType(data.userType);
           if (data.userType === "admin") {
-            await fetchUsers(); // move fetchUsers call inside fetchUserType
+            await fetchUsers();
           }
         }
+        setLoading(false);
       };
 
       const fetchUsers = async () => {
@@ -103,13 +104,14 @@ const UserManagement = () => {
       });
     }
   };
-
-  if (status === "loading" || userType === null) return <LoadingComponent />;
+ if (loading) {
+   return <LoadingComponent />; 
+ }
   if (!session) {
     router.push("/login");
     return null;
   }
-  if (userType !== "admin" ) {
+  if (userType !== "admin") {
     return (
       <div className="flex flex-col justify-center items-center h-screen text-center lowercase">
         <p>You do not have admin privileges.</p>
